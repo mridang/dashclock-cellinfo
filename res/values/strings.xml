@@ -1,9 +1,9 @@
 <resources>
 
     <string name="roam_network">Roaming</string>
-    <string name="extension_name">Network Information</string>
-    <string name="application_name">Dashclock Cell Info Extension</string>
-    <string name="extension_info">Displays information about your current cellular connection.</string>
+    <string name="extension_name">Cellular Network</string>
+    <string name="application_name">Dashclock Cellular Extension</string>
+    <string name="extension_info">Displays information about your current cellular network.</string>
     <string name="home_network">Home</string>
 
 </resources>

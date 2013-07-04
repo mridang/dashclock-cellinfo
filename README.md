@@ -1,4 +1,4 @@
 dashclock-cellinfo
 ==================
 
-A Dashclock plugin that displays information about the phone's cellular network
+A Dashclock plugin that displays information about your current cellular network.
