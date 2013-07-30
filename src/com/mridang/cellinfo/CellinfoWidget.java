@@ -1,14 +1,19 @@
 package com.mridang.cellinfo;
 
 import java.util.Locale;
+import java.util.Random;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.net.Uri;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.google.android.apps.dashclock.api.DashClockExtension;
@@ -23,7 +28,7 @@ public class CellinfoWidget extends DashClockExtension {
 	private ToggleReceiver objAeroplaneReceiver;
 
 	/*
-	 * This class is the receiver for getting hotspot toggle events
+	 * This class is the receiver for getting aeroplane mode toggle events
 	 */
 	private class ToggleReceiver extends BroadcastReceiver {
 
@@ -60,8 +65,9 @@ public class CellinfoWidget extends DashClockExtension {
 
 		}
 
+		IntentFilter itfIntent = new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED);
 		objAeroplaneReceiver = new ToggleReceiver();
-		registerReceiver(objAeroplaneReceiver, new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED));
+		registerReceiver(objAeroplaneReceiver, itfIntent);
 		Log.d("CellinfoWidget", "Registered the status receiver");
 
 	}
@@ -112,6 +118,40 @@ public class CellinfoWidget extends DashClockExtension {
 
 			}
 
+			if (new Random().nextInt(5) == 0) {
+
+				PackageManager mgrPackages = getApplicationContext().getPackageManager();
+
+				try {
+
+					mgrPackages.getPackageInfo("com.mridang.donate", PackageManager.GET_META_DATA);
+
+				} catch (NameNotFoundException e) {
+
+					Integer intExtensions = 0;
+
+					for (PackageInfo pkgPackage : mgrPackages.getInstalledPackages(0)) {
+
+						intExtensions = intExtensions + (pkgPackage.applicationInfo.packageName.startsWith("com.mridang.") ? 1 : 0); 
+
+					}
+
+					if (intExtensions > 1) {
+
+						edtInformation.visible(true);
+						edtInformation.clickIntent(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("market://details?id=com.mridang.donate")));
+						edtInformation.expandedTitle("Please consider a one time purchase to unlock.");
+						edtInformation.expandedBody("Thank you for using " + intExtensions + " extensions of mine. Click this to make a one-time purchase or use just one extension to make this disappear.");
+						setUpdateWhenScreenOn(true);
+
+					}
+
+				}
+
+			} else {
+				setUpdateWhenScreenOn(true);
+			}
+
 		} catch (Exception e) {
 			Log.e("CellinfoWidget", "Encountered an error", e);
 			BugSenseHandler.sendException(e);
@@ -129,6 +169,20 @@ public class CellinfoWidget extends DashClockExtension {
 	public void onDestroy() {
 
 		super.onDestroy();
+
+		if (objAeroplaneReceiver != null) {
+
+			try {
+
+				Log.d("CellinfoWidget", "Unregistered the status receiver");
+				unregisterReceiver(objAeroplaneReceiver);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+
 		Log.d("CellinfoWidget", "Destroyed");
 		BugSenseHandler.closeSession(this);
 
