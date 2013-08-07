@@ -89,13 +89,11 @@ public class CellinfoWidget extends DashClockExtension {
 	 * (int)
 	 */
 	@Override
-	protected void onUpdateData(int arg0) {
-
-		setUpdateWhenScreenOn(true);
+	protected void onUpdateData(int intReason) {
 
 		Log.d("CellinfoWidget", "Fetching cellular network information");
 		ExtensionData edtInformation = new ExtensionData();
-		edtInformation.visible(false);
+		setUpdateWhenScreenOn(true);
 
 		try {
 
@@ -153,6 +151,7 @@ public class CellinfoWidget extends DashClockExtension {
 			}
 
 		} catch (Exception e) {
+			edtInformation.visible(false);
 			Log.e("CellinfoWidget", "Encountered an error", e);
 			BugSenseHandler.sendException(e);
 		}
