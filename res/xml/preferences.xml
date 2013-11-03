@@ -1,0 +1,10 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.mridang.callstats" >
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="network_mode"
+        android:summary="@string/summary_text"
+        android:title="@string/network_mode" />
+
+</PreferenceScreen>

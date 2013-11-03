@@ -6,6 +6,7 @@ import java.util.Random;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -36,7 +37,7 @@ public class CellinfoWidget extends DashClockExtension {
 		 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
 		 */
 		@Override
-		public void onReceive(Context context, Intent intent) {
+		public void onReceive(Context ctxContext, Intent ittIntent) {
 
 			onUpdateData(0);
 
@@ -109,8 +110,37 @@ public class CellinfoWidget extends DashClockExtension {
 					String strCountry = new Locale("en", tmrTelephone.getNetworkCountryIso()).getDisplayCountry();
 
 					edtInformation.visible(true);
-					edtInformation.status(String.format("%s — %s", strOperator, strCountry));
+					edtInformation.status(String.format("%s, %s", strOperator, strCountry));
 					edtInformation.expandedBody(tmrTelephone.isNetworkRoaming() ? getString(R.string.roam_network) : getString(R.string.home_network));
+
+					if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("network_mode", false)) {
+
+						String strProtocol = null;
+						switch (tmrTelephone.getNetworkType()) {
+						case TelephonyManager.NETWORK_TYPE_GPRS:
+						case TelephonyManager.NETWORK_TYPE_EDGE:
+						case TelephonyManager.NETWORK_TYPE_CDMA:
+						case TelephonyManager.NETWORK_TYPE_1xRTT:
+						case TelephonyManager.NETWORK_TYPE_IDEN:
+							strProtocol = "2G";
+						case TelephonyManager.NETWORK_TYPE_UMTS:
+						case TelephonyManager.NETWORK_TYPE_EVDO_0:
+						case TelephonyManager.NETWORK_TYPE_EVDO_A:
+						case TelephonyManager.NETWORK_TYPE_HSDPA:
+						case TelephonyManager.NETWORK_TYPE_HSUPA:
+						case TelephonyManager.NETWORK_TYPE_HSPA:
+						case TelephonyManager.NETWORK_TYPE_EVDO_B:
+						case TelephonyManager.NETWORK_TYPE_EHRPD:
+						case TelephonyManager.NETWORK_TYPE_HSPAP:
+							strProtocol = "3G";
+						case TelephonyManager.NETWORK_TYPE_LTE:
+							strProtocol = "4G";
+						default:
+							strProtocol = "Unknown";
+						}
+
+						edtInformation.expandedBody(edtInformation.expandedBody() + "\n" + strProtocol);
+					}
 
 				}
 
