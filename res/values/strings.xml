@@ -1,12 +1,13 @@
 <resources>
 
     <string name="network_mode">Show network mode</string>
-    <string name="roam_network">Roaming</string>
+    <string name="roam_network">On a roaming network with %1$s connectivity</string>
     <string name="extension_name">Cellular Network</string>
     <string name="application_name">Dashclock Cellular Extension</string>
     <string name="extension_info">Displays information about your current cellular network.</string>
     <string name="preferences_title">Cellular Network Extension Settings</string>
     <string name="summary_text">Enabling this beta feature shows the current network type in the extension status. This is an experimental feature and may exhibit quirky behaviour when dealing with 4G and LTE networks.</string>
-    <string name="home_network">Home</string>
+    <string name="home_network">On your home network with %1$s connectivity</string>
+    <string name="message">%1$s network on %2$s, %3$s</string>
 
 </resources>
