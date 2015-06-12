@@ -1,9 +1,5 @@
 package com.mridang.cellinfo;
 
-import java.util.Locale;
-
-import org.acra.ACRA;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +10,10 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.android.apps.dashclock.api.ExtensionData;
+
+import org.acra.ACRA;
+
+import java.util.Locale;
 
 /*
  * This class is the main class that provides the widget
@@ -78,10 +78,12 @@ public class CellinfoWidget extends ImprovedExtension {
 				if (tmrTelephone.getPhoneType() != TelephonyManager.PHONE_TYPE_NONE
 						&& tmrTelephone.getSimState() == TelephonyManager.SIM_STATE_READY) {
 
+					edtInformation.visible(true);
+
 					String strOperator = tmrTelephone.getNetworkOperatorName();
 					String strCountry = new Locale("en", tmrTelephone.getNetworkCountryIso()).getDisplayCountry();
-					String strProtocol;
-					String strType;
+					String strProtocol = null;
+					String strType = null;
 					switch (tmrTelephone.getNetworkType()) {
 					case TelephonyManager.NETWORK_TYPE_GPRS:
 						strProtocol = "2G";
@@ -144,8 +146,7 @@ public class CellinfoWidget extends ImprovedExtension {
 						strType = "LTE";
 						break;
 					default:
-						strProtocol = "unknown";
-						strType = "XX";
+						edtInformation.visible(false);
 						break;
 					}
 
@@ -162,8 +163,7 @@ public class CellinfoWidget extends ImprovedExtension {
 					}
 
 					edtInformation.status(strType);
-					edtInformation.visible(true);
-
+					edtInformation.clickIntent(new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS));
 				}
 
 			}
